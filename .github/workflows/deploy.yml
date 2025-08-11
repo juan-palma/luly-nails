@@ -1,25 +1,3 @@
-#name: test-vps
-##ejecutar al hacer push a main
-#on:
-#  push:
-#    branches: ["main"]
-
-#jobs:
-#  test-ssh:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Test SSH connection and permissions
-#        uses: appleboy/ssh-action@v0.1.8
-#        with:
-#          host: ${{ secrets.PLESK_HOST }}
-#          username: ${{ secrets.PLESK_USER }}
-#          key: ${{ secrets.SSH_PRIVATE_KEY }}
-#          port: 22
-#          script: |
-#            mkdir -p test-dir && echo "Folder created" && rm -rf test-dir && echo "Folder deleted"
-
-
-
 name: Deploy to VPS Root
 #ejecutar al hacer push a main
 on:
@@ -51,24 +29,6 @@ jobs:
 
       - name: Package deploy folder
         run: tar czf deploy.tar.gz packages/front/dist packages/back packages/config package.json pnpm-lock.yaml pnpm-workspace.yaml
-
-      # 3. Copiar estructura directo al VPS
-      #- name: Rsync Deployment
-      #  uses: burnett01/rsync-deployments@7.0.2
-      #  with:
-      #    #switches: -avzr --delete
-      #    switches: -avzr --delete --progress --stats -vv
-      #    path: |
-      #      packages/front/dist/
-      #      packages/back/
-      #      packages/config/
-      #      package.json
-      #      pnpm-lock.yaml
-      #      pnpm-workspace.yaml
-      #    remote_path: ${{ secrets.REMOTE_PATH }}
-      #    remote_host: ${{ secrets.PLESK_HOST }}
-      #    remote_user: ${{ secrets.PLESK_USER }}
-      #    remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Upload test file via SCP
         uses: appleboy/scp-action@v0.1.5

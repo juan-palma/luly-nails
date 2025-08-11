@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 //import dotenv from "dotenv";
 //dotenv.config()
-import { loadEnv } from 'config/loadEnv.js';
+import { loadEnv } from '../../../config/loadEnv.js';
 loadEnv(['MONGO_DB']);
 
 const URL = process.env.MONGO_DB
