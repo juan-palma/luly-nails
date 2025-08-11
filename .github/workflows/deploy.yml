@@ -85,7 +85,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           source: "packages/front/dist/index.html"
-          target: "/var/www/vhosts/soledad-ar.com/luly-nails.soledad-ar.com/"
+          target: ${{ secrets.SSH_PRIVATE_KEY }}
 
 
       # 4. Trigger restart en Plesk
