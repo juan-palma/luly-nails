@@ -1,3 +1,9 @@
+name: test-vps
+#ejecutar al hacer push a main
+on:
+  push:
+    branches: ["main"]
+
 jobs:
   test-ssh:
     runs-on: ubuntu-latest
