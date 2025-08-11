@@ -28,7 +28,7 @@ jobs:
           pnpm --filter front run build
 
       - name: Package deploy folder
-        run: tar czf deploy.tar.gz packages/front/dist packages/back/package.json packages/back/src package.json
+        run: tar czf deploy.tar.gz front/dist back/package.json back/src package.json
 
       - name: Upload test file via SCP
         uses: appleboy/scp-action@v0.1.5
