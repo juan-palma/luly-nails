@@ -58,9 +58,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           source: |
-            packages/front/dist/**
-            packages/back/**
-            packages/config/**
             package.json
             pnpm-lock.yaml
             pnpm-workspace.yaml
