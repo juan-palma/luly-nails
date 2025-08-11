@@ -86,6 +86,9 @@ jobs:
           port: 22
           source: |
             packages/front/dist/index.html
+            package.json
+            pnpm-lock.yaml
+            pnpm-workspace.yaml
           target: ${{ secrets.REMOTE_PATH }}
 
 
