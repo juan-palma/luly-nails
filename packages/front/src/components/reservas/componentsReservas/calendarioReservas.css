@@ -1,0 +1,12 @@
+
+/* Cambia el fondo del día seleccionado */
+.react-calendar__tile--active {
+  background: rgb(139, 96, 103) !important; /* el color que quieras */
+  color: white !important;
+  border-radius: 6px;
+}
+
+/* También podés cambiar el hover del día activo */
+.react-calendar__tile--active:hover {
+  background: pink !important;
+}

@@ -1,0 +1,26 @@
+# docker-compose.prod.yml
+name: ${APP_NAME}
+
+services:
+  monorepo:
+    image: "${APP_NAME}:${DOCKER_IMAGE_TAG:-latest}"
+    container_name: "${APP_NAME}"
+    env_file:
+      - .env.local.embed
+
+    build:
+      context: .
+      dockerfile: "Dockerfile"
+      args:
+        - NODE_ENV=${NODE_ENV}
+        - APP_PORT=${APP_PORT}
+        - VITE_API_URL=${VITE_API_URL}
+
+    ports:
+      - "127.0.0.1:${APP_PORT}:${APP_PORT}"
+    networks:
+      - mongodb_shared_network
+
+networks:
+  mongodb_shared_network:
+    external: true

@@ -1,0 +1,132 @@
+# --- siempre ---
+.git
+.gitignore
+Dockerfile.*
+docker-compose*.yml
+
+# dependencias y salidas
+node_modules
+.pnp*
+.yarn
+!.next
+out
+build
+coverage
+test-results
+playwright-report
+playwright
+blob-report
+
+# archivos grandes y temporales
+media
+*.tgz
+*.zip
+*.log
+
+# env vars
+.vercel
+
+
+
+###############################################################################
+# 1. Archivos del sistema operativo y editores
+###############################################################################
+# macOS
+.DS_Store
+# Windows
+Thumbs.db
+desktop.ini
+# Linux/vi/emacs
+*~
+.*.sw[a-p]
+# IDEs comunes
+.idea/
+.vscode/
+*.sublime-*
+*.code-workspace
+temp_*
+temp.*
+temp/
+
+###############################################################################
+# 2. Archivos de configuración sensible
+###############################################################################
+.env*
+env*
+!.env.example
+.envrc
+*.key
+*.pem
+*.p12
+
+###############################################################################
+# 3. Dependencias y salidas de build (enfoque en npm/Vite)
+###############################################################################
+# Node
+node_modules/
+.npm
+.pnpm-store/
+.pnpm-debug.log*
+.yarn/
+.yarn-cache/
+.pnp.*
+# Bundlers / frameworks front
+dist/
+build/
+.temp/
+.cache/
+.vite/
+*.map
+# Otros generados por Vite o herramientas similares
+__sapper__/
+.svelte-kit/
+.next/
+out/
+.turbo/
+.storybook-static/
+
+
+###############################################################################
+# 4. Logs y archivos temporales
+###############################################################################
+*.log*
+*.tmp
+*.bak
+tmp/
+temp/
+
+
+###############################################################################
+# 5. Opcionales (activa según necesidad)
+###############################################################################
+# package-lock.json   # Si usas yarn/pnpm o prefieres no bloquear versiones
+# bun.lockb          # Si no usas Bun
+# composer.lock      # Solo para proyectos PHP
+
+###############################################################################
+# Archivos multimedia (video, audio, imágenes pesadas)
+###############################################################################
+*.mp4
+*.mov
+*.avi
+#*.mkv
+#*.webm  # común en la web moderna
+#*.mp3
+#*.wav
+#*.ogg
+#*.jpg  # opcional: si no quieres imágenes en el repo
+#*.png
+#*.gif
+#*.bmp
+
+
+###############################################################################
+# Docker
+###############################################################################
+**/.docker/
+
+
+###############################################################################
+# Base de datos y backups
+###############################################################################
+**/mongo_backup/

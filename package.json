@@ -1,0 +1,17 @@
+{
+  "name": "monorepo-turno",
+  "private": true,
+  "version": "1.0.0",
+  "packageManager": "pnpm@10.14.0",
+  "scripts": {
+	"dev:back": "pnpm --filter back dev",
+    "dev:front": "pnpm --filter front dev",
+	"build": "pnpm --filter front build",
+	"preview": "pnpm --filter front preview",
+	"start": "pnpm --filter back start",
+	"delete": "exec -- rm -rf node_modules packages/back/node_modules packages/front/node_modules packages/front/dist"
+  },
+  "devDependencies": {
+    
+  }
+}

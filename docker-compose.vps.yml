@@ -1,0 +1,19 @@
+# docker-compose.prod.yml
+name: ${APP_NAME}
+
+services:
+  monorepo:
+    image: "${URL_IMAGE_GHCR}"
+    container_name: "${APP_NAME}"
+    env_file:
+      - .env.vps.embed
+
+    ports:
+      - "127.0.0.1:${APP_PORT}:8080"
+    networks:
+      - mongodb_shared_network
+    restart: unless-stopped
+
+networks:
+  mongodb_shared_network:
+    external: true
