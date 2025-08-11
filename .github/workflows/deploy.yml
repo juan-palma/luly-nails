@@ -61,11 +61,6 @@ jobs:
             # Cambiar permisos para archivos
             find ${{ secrets.REMOTE_PATH }} -type f -exec chmod 664 {} +
 
-            # Ejecutar npm install en carpeta back
-            cd ${{ secrets.REMOTE_PATH }}/back || exit 1
-            # Por si usas pnpm o npm, usa npm install, puedes ajustar si usas pnpm
-            npm install
-
 
       # 4. Trigger restart en Plesk
       - name: Trigger Plesk Restart
