@@ -51,4 +51,4 @@ jobs:
           key: ${{ secrets.PLESK_SSH_KEY }}
           script: |
             touch ${{ secrets.REMOTE_PATH }}/restart.txt
-            echo "🔄 Reinicio de aplicación solicitado via restart.txt"
+            echo "🔄 Reinicio de aplicación via restart.txt"
