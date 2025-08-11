@@ -49,19 +49,44 @@ jobs:
           pnpm install --frozen-lockfile
           pnpm --filter front run build
 
-      # 3. Copiar estructura directo al VPS usando SCP
-      - name: Upload entire project structure via SCP
+      - name: List files before rsync
+        run: |
+          ls -la
+          ls -la packages/back
+          ls -la packages/config
+          ls -la packages/front/dist
+          ls -la pnpm-lock.yaml
+          ls -la pnpm-workspace.yaml
+          ls -la package.json
+
+      # 3. Copiar estructura directo al VPS
+      #- name: Rsync Deployment
+      #  uses: burnett01/rsync-deployments@7.0.2
+      #  with:
+      #    #switches: -avzr --delete
+      #    switches: -avzr --delete --progress --stats -vv
+      #    path: |
+      #      packages/front/dist/
+      #      packages/back/
+      #      packages/config/
+      #      package.json
+      #      pnpm-lock.yaml
+      #      pnpm-workspace.yaml
+      #    remote_path: ${{ secrets.REMOTE_PATH }}
+      #    remote_host: ${{ secrets.PLESK_HOST }}
+      #    remote_user: ${{ secrets.PLESK_USER }}
+      #    remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Upload test file via SCP
         uses: appleboy/scp-action@v0.1.5
         with:
           host: ${{ secrets.PLESK_HOST }}
           username: ${{ secrets.PLESK_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-          source: |
-            package.json
-            pnpm-lock.yaml
-            pnpm-workspace.yaml
-          target: ${{ secrets.REMOTE_PATH }}
+          source: "packages/front/dist/index.html"
+          target: "/var/www/vhosts/soledad-ar.com/luly-nails.soledad-ar.com/"
+
 
       # 4. Trigger restart en Plesk
       - name: Trigger Plesk Restart
