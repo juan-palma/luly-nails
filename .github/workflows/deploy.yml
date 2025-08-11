@@ -66,12 +66,7 @@ jobs:
           #switches: -avzr --delete
           switches: -avzr --delete --progress --stats -vv
           path: |
-            packages/front/dist/
-            packages/back/
-            packages/config/
             package.json
-            pnpm-lock.yaml
-            pnpm-workspace.yaml
           remote_path: ${{ secrets.REMOTE_PATH }}
           remote_host: ${{ secrets.PLESK_HOST }}
           remote_user: ${{ secrets.PLESK_USER }}
