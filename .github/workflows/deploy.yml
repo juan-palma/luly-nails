@@ -1,76 +1,56 @@
-name: test-vps
+name: Deploy to VPS Root
 #ejecutar al hacer push a main
 on:
   push:
     branches: ["main"]
 
 jobs:
-  test-ssh:
+  deploy:
     runs-on: ubuntu-latest
+    env:
+      VITE_API_URL: ${{ secrets.VITE_API_URL }}
+
     steps:
-      - name: Test SSH connection and permissions
-        uses: appleboy/ssh-action@v0.1.8
+      # 1. Checkout y configuración inicial
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.15.1"
+
+      # 2. Instalar pnpm y dependencias
+      - name: Install dependencies
+        run: |
+          npm install -g pnpm
+          pnpm install --frozen-lockfile
+          pnpm --filter front run build
+
+      # 3. Copiar estructura directo al VPS
+      - name: Rsync Deployment
+        uses: burnett01/rsync-deployments@7.0.2
+        with:
+          switches: -avzr --delete
+          path: |
+            packages/front/dist/
+            packages/back/
+            packages/config/
+            package.json
+            pnpm-lock.yaml
+            pnpm-workspace.yaml
+          remote_path: ${{ secrets.REMOTE_PATH }}
+          remote_host: ${{ secrets.PLESK_HOST }}
+          remote_user: ${{ secrets.PLESK_USER }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      # 4. Trigger restart en Plesk
+      - name: Trigger Plesk Restart
+        uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.PLESK_HOST }}
           username: ${{ secrets.PLESK_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22
           script: |
-            mkdir -p test-dir && echo "Folder created" && rm -rf test-dir && echo "Folder deleted"
-
-
-
-#name: Deploy to VPS Root
-##ejecutar al hacer push a main
-#on:
-#  push:
-#    branches: ["main"]
-
-#jobs:
-#  deploy:
-#    runs-on: ubuntu-latest
-
-#    steps:
-#      # 1. Checkout y configuración inicial
-#      - name: Checkout code
-#        uses: actions/checkout@v4
-
-#      - name: Setup Node.js
-#        uses: actions/setup-node@v4
-#        with:
-#          node-version: "20.15.1"
-
-#      # 2. Instalar pnpm y dependencias
-#      - name: Install dependencies
-#        run: |
-#          npm install -g pnpm
-#          pnpm install --frozen-lockfile
-#          pnpm --filter front run build
-
-#      # 3. Copiar estructura directo al VPS
-#      - name: Rsync Deployment
-#        uses: burnett01/rsync-deployments@7.0.2
-#        with:
-#          switches: -avzr --delete
-#          path: |
-#            packages/front/dist/
-#            packages/back/
-#            packages/config/
-#            package.json
-#            pnpm-lock.yaml
-#            pnpm-workspace.yaml
-#          remote_path: ${{ secrets.REMOTE_PATH }}
-#          remote_host: ${{ secrets.PLESK_HOST }}
-#          remote_user: ${{ secrets.PLESK_USER }}
-#          remote_key: ${{ secrets.PLESK_SSH_KEY }}
-
-#      # 4. Trigger restart en Plesk
-#      - name: Trigger Plesk Restart
-#        uses: appleboy/ssh-action@v1.0.0
-#        with:
-#          host: ${{ secrets.PLESK_HOST }}
-#          username: ${{ secrets.PLESK_USER }}
-#          key: ${{ secrets.PLESK_SSH_KEY }}
-#          script: |
-#            touch ${{ secrets.REMOTE_PATH }}/restart.txt
-#            echo "🔄 Reinicio de aplicación via restart.txt"
+            touch ${{ secrets.REMOTE_PATH }}/restart.txt
+            echo "🔄 Reinicio de aplicación via restart.txt"
