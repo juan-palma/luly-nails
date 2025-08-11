@@ -84,7 +84,8 @@ jobs:
           username: ${{ secrets.PLESK_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-          source: packages/front/dist/index.html
+          source: |
+            packages/front/dist/index.html
           target: ${{ secrets.REMOTE_PATH }}
 
 
