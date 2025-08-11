@@ -28,9 +28,23 @@ jobs:
           pnpm --filter front run build
 
       - name: Package deploy folder
-        run: tar czf deploy.tar.gz front/dist back/package.json back/src package.json
+        run: |
+          # Cambiar permisos para directorios a 774 (rwxrwxr--)
+          find front -type d -exec chmod 774 {} +
+          find back -type d -exec chmod 774 {} +
 
-      - name: Upload test file via SCP
+          # Cambiar permisos para archivos a 664 (rw-rw-r--)
+          find front -type f -exec chmod 664 {} +
+          find back -type f -exec chmod 664 {} +
+
+          # Cambiar permisos para archivos package.json específicos a 664
+          chmod 664 back/package.json
+          chmod 664 package.json
+
+          # Comprimir las carpetas y archivos con permisos ya ajustados
+          tar czf deploy.tar.gz front/dist back/package.json back/src package.json
+
+      - name: Upload file to VPS
         uses: appleboy/scp-action@v0.1.5
         with:
           host: ${{ secrets.PLESK_HOST }}
@@ -51,16 +65,6 @@ jobs:
             # Descomprimir el tarball en la carpeta destino
             tar xzf ${{ secrets.REMOTE_PATH }}/deploy.tar.gz -C ${{ secrets.REMOTE_PATH }}
             rm ${{ secrets.REMOTE_PATH }}/deploy.tar.gz
-
-            # Cambiar propietario y grupo recursivamente a user_plesk:user_plesk
-            chown -R ${{ secrets.PLESK_OWNER }}: ${{ secrets.REMOTE_PATH }}/front/dist ${{ secrets.REMOTE_PATH }}/back/package.json ${{ secrets.REMOTE_PATH }}/back/src ${{ secrets.REMOTE_PATH }}/package.json
-
-            # Cambiar permisos de directorios (incluye setgid para heredar grupo)
-            find ${{ secrets.REMOTE_PATH }} -type d -exec chmod 2775 {} +
-
-            # Cambiar permisos para archivos
-            find ${{ secrets.REMOTE_PATH }} -type f -exec chmod 664 {} +
-
 
       # 4. Trigger restart en Plesk
       - name: Trigger Plesk Restart
