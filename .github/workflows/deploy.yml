@@ -49,15 +49,8 @@ jobs:
           pnpm install --frozen-lockfile
           pnpm --filter front run build
 
-      - name: List files before rsync
-        run: |
-          ls -la
-          ls -la packages/back
-          ls -la packages/config
-          ls -la packages/front/dist
-          ls -la pnpm-lock.yaml
-          ls -la pnpm-workspace.yaml
-          ls -la package.json
+      - name: Package deploy folder
+        run: tar czf deploy.tar.gz packages/front/dist packages/back packages/config package.json pnpm-lock.yaml pnpm-workspace.yaml
 
       # 3. Copiar estructura directo al VPS
       #- name: Rsync Deployment
@@ -84,12 +77,19 @@ jobs:
           username: ${{ secrets.PLESK_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-          source: |
-            packages/front/dist/index.html
-            package.json
-            pnpm-lock.yaml
-            pnpm-workspace.yaml
+          source: deploy.tar.gz
           target: ${{ secrets.REMOTE_PATH }}
+
+      - name: Extract deploy tarball remotely
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.PLESK_HOST }}
+          username: ${{ secrets.PLESK_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            tar xzf ${{ secrets.REMOTE_PATH }}/deploy.tar.gz -C ${{ secrets.REMOTE_PATH }}
+            rm ${{ secrets.REMOTE_PATH }}/deploy.tar.gz
 
 
       # 4. Trigger restart en Plesk
