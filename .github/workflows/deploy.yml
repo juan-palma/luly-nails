@@ -85,7 +85,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           source: "packages/front/dist/index.html"
-          target: ${{ secrets.SSH_PRIVATE_KEY }}
+          target: ${{ secrets.REMOTE_PATH }}
 
 
       # 4. Trigger restart en Plesk
