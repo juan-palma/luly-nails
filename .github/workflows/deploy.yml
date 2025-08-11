@@ -49,6 +49,16 @@ jobs:
           pnpm install --frozen-lockfile
           pnpm --filter front run build
 
+      - name: List files before rsync
+        run: |
+          ls -la
+          ls -la packages/back
+          ls -la packages/config
+          ls -la packages/front/dist
+          ls -la pnpm-lock.yaml
+          ls -la pnpm-workspace.yaml
+          ls -la package.json
+
       # 3. Copiar estructura directo al VPS
       - name: Rsync Deployment
         uses: burnett01/rsync-deployments@7.0.2
@@ -56,6 +66,9 @@ jobs:
           #switches: -avzr --delete
           switches: -avzr --delete --progress --stats -vv
           path: |
+            packages/front/dist/
+            packages/back/
+            packages/config/
             package.json
             pnpm-lock.yaml
             pnpm-workspace.yaml
