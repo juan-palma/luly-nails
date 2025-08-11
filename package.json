@@ -9,7 +9,7 @@
 	"build": "pnpm --filter front build",
 	"preview": "pnpm --filter front preview",
 	"start": "pnpm --filter back start",
-	"delete": "exec -- rm -rf node_modules packages/back/node_modules packages/front/node_modules packages/front/dist"
+	"delete": "exec -- rm -rf node_modules back/node_modules front/node_modules front/dist"
   },
   "devDependencies": {
     

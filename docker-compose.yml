@@ -6,7 +6,7 @@ services:
     image: "${APP_NAME}:${DOCKER_IMAGE_TAG:-latest}"
     container_name: "${APP_NAME}"
     env_file:
-      - .env.local.embed
+      - .env.docker.embed
 
     build:
       context: .

@@ -4,7 +4,7 @@ import path from 'path';
 
 export default defineConfig(({ mode }) => {
   // Ruta al directorio raíz donde está el archivo .env (2 niveles arriba de vite.config.js)
-  const envDir = path.resolve(__dirname, '../../');
+  const envDir = path.resolve(__dirname, '../');
   const envFromFile = loadEnv(mode, envDir, 'VITE_');
 
   const env = Object.fromEntries(

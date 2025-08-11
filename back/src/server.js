@@ -86,7 +86,7 @@ import { colaboradoresRouter } from './routes/colaboradores.routes.js';
 import { reservasRouter } from './routes/reservas.routes.js';
 import { errorHandler } from './middlewares/errorMiddleware.js';
 
-import { loadEnv } from '../../config/loadEnv.js';
+import { loadEnv } from './config/loadEnv.js';
 loadEnv(['APP_PORT']);
 
 const app = express();

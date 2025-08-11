@@ -28,7 +28,7 @@ jobs:
           pnpm --filter front run build
 
       - name: Package deploy folder
-        run: tar czf deploy.tar.gz packages/front/dist packages/back packages/config package.json pnpm-lock.yaml pnpm-workspace.yaml
+        run: tar czf deploy.tar.gz packages/front/dist packages/back/package.json packages/back/src package.json
 
       - name: Upload test file via SCP
         uses: appleboy/scp-action@v0.1.5
@@ -40,7 +40,7 @@ jobs:
           source: deploy.tar.gz
           target: ${{ secrets.REMOTE_PATH }}
 
-      - name: Extract deploy tarball remotely
+      - name: Extract deploy tarball, fix permissions and install npm
         uses: appleboy/ssh-action@v0.1.8
         with:
           host: ${{ secrets.PLESK_HOST }}
@@ -48,8 +48,23 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
+            # Descomprimir el tarball en la carpeta destino
             tar xzf ${{ secrets.REMOTE_PATH }}/deploy.tar.gz -C ${{ secrets.REMOTE_PATH }}
             rm ${{ secrets.REMOTE_PATH }}/deploy.tar.gz
+
+            # Cambiar propietario y grupo recursivamente a user_plesk:user_plesk
+            chown -R ${{ secrets.PLESK_OWNER }}: ${{ secrets.REMOTE_PATH }}/front/dist ${{ secrets.REMOTE_PATH }}/back/package.json ${{ secrets.REMOTE_PATH }}/back/src ${{ secrets.REMOTE_PATH }}/package.json
+
+            # Cambiar permisos de directorios (incluye setgid para heredar grupo)
+            find ${{ secrets.REMOTE_PATH }} -type d -exec chmod 2775 {} +
+
+            # Cambiar permisos para archivos
+            find ${{ secrets.REMOTE_PATH }} -type f -exec chmod 664 {} +
+
+            # Ejecutar npm install en carpeta back
+            cd ${{ secrets.REMOTE_PATH }}/back || exit 1
+            # Por si usas pnpm o npm, usa npm install, puedes ajustar si usas pnpm
+            npm install
 
 
       # 4. Trigger restart en Plesk

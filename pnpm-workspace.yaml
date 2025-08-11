@@ -1,5 +1,6 @@
 packages:
-  - "packages/*"
+  - "back"
+  - "front"
 
 onlyBuiltDependencies:
   - '@swc/core'
