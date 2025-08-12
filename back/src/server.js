@@ -36,9 +36,9 @@ app.use("/api/colaboradores", colaboradoresRouter)
 app.use("/api/reservas", reservasRouter)
 app.use(errorHandler)
 
-app.get('/test', (req, res) => {
-  res.json({ valor: 'test3' });
-});
+//app.get('/test', (req, res) => {
+//  res.json({ valor: 'test3' });
+//});
 
 // Servir archivos estáticos del frontend (Vite)
 app.use(express.static(path.join(__dirname, '../../front/dist')));
