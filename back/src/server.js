@@ -37,7 +37,7 @@ app.use("/api/reservas", reservasRouter)
 app.use(errorHandler)
 
 app.get('/test', (req, res) => {
-  res.json({ valor: 'test2' });
+  res.json({ valor: 'test3' });
 });
 
 // Servir archivos estáticos del frontend (Vite)
