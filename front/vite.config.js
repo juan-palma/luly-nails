@@ -14,14 +14,13 @@ export default defineConfig(({ mode }) => {
     ])
   );
 
-  console.log('Variables existentes:', env);
-
+  //console.log('Variables existentes:', env);
   return {
     plugins: [react()],
     server: {
       proxy: {
         '/api': {
-          target: env.VITE_API_URL || 'http://localhost:3000/api',
+          target: env.VITE_API_URL || 'http://localhost:3050/api',
           changeOrigin: true,
         },
       },

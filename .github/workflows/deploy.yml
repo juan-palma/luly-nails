@@ -29,18 +29,6 @@ jobs:
 
       - name: Package deploy folder
         run: |
-          # Cambiar permisos para directorios a 774 (rwxrwxr--)
-          find front -type d -exec chmod 774 {} +
-          find back -type d -exec chmod 774 {} +
-
-          # Cambiar permisos para archivos a 664 (rw-rw-r--)
-          find front -type f -exec chmod 664 {} +
-          find back -type f -exec chmod 664 {} +
-
-          # Cambiar permisos para archivos package.json específicos a 664
-          chmod 664 back/package.json
-          chmod 664 package.json
-
           # Comprimir las carpetas y archivos con permisos ya ajustados
           tar czf deploy.tar.gz front/dist back/package.json back/src package.json
 

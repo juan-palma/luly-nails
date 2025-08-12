@@ -1,81 +1,3 @@
-// import express from 'express';
-// import cors from 'cors';
-// import { connectDB } from './config/configDB.js';
-// import { serviciosRouter } from './routes/servicio.routes.js';
-// import { colaboradoresRouter } from './routes/colaboradores.routes.js';
-// import reservasRouter from './routes/reservas.routes.js';
-// import { errorHandler } from './middlewares/errorMiddleware.js';
-// import dotenv from 'dotenv';
-
-// dotenv.config();
-
-// const app = express();
-
-// console.log("🌍 FRONTEND_URL en backend:", process.env.FRONTEND_URL);
-
-// const allowedOrigins = [
-//   process.env.FRONTEND_URL, // Para producción
-//   'http://localhost:3000',  // Para desarrollo local
-// ];
-
-// app.use(cors({
-//   origin: function (origin, callback) {
-//     console.log("🛰️ Origin recibido:", origin);
-//     if (!origin || allowedOrigins.includes(origin)) {
-//       callback(null, true);
-//     } else {
-//       console.log("❌ Error CORS: Not allowed by CORS:", origin);
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   }
-// }));
-
-// app.use(express.json());
-
-// app.use("/api/servicios", serviciosRouter);
-// app.use("/api/colaboradores", colaboradoresRouter);
-// app.use("/api/reservas", reservasRouter);
-
-// app.use(errorHandler);
-
-// const PORT = process.env.PORT || 8081;
-// app.listen(PORT, () => {
-//   console.log(`🚀 Servidor corriendo en el puerto ${PORT}`);
-// });
-
-// connectDB();
-
-
-
-// import express from 'express';
-// import cors from 'cors';
-// import { connectDB } from './config/configDB.js' 
-// import { serviciosRouter } from './routes/servicio.routes.js';
-// import { colaboradoresRouter } from './routes/colaboradores.routes.js';
-// import {errorHandler} from './middlewares/errorMiddleware.js'
-// import reservasRouter from './routes/reservas.routes.js';
-// import dotenv from 'dotenv';
-// dotenv.config();
-
-// const app = express();
-// app.use(cors())
-
-// app.use(express.json() );
-
-// app.use("api/servicios", serviciosRouter)
-// app.use("api/colaboradores", colaboradoresRouter)
-// app.use("api/reservas", reservasRouter)
-
-
-// app.use(errorHandler)
-
-// const PORT = process.env.PORT || 5000;
-// app.listen(PORT, ()=> {
-//     console.log(`Server is running on port ${PORT}`);
-// })
-
-// connectDB()
-
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
@@ -86,14 +8,26 @@ import { colaboradoresRouter } from './routes/colaboradores.routes.js';
 import { reservasRouter } from './routes/reservas.routes.js';
 import { errorHandler } from './middlewares/errorMiddleware.js';
 
+// Cargar las variables de entorno desde el archivo .env en el directorio raíz
 import { loadEnv } from './config/loadEnv.js';
 loadEnv(['APP_PORT']);
 
 const app = express();
-const port = process.env.APP_PORT || '3000';
+const port = process.env.APP_PORT || '3050';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-app.use(cors());
+const allowedOrigins = process.env.DOMAIN_CORS.split(',');
+app.use(cors({
+  origin: function(origin, callback) {
+    // permitir requests sin origen (como Postman o servidores)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('No permitido por CORS'));
+    }
+  }
+}));
 app.use(express.json());
 
 
@@ -102,6 +36,10 @@ app.use("/api/colaboradores", colaboradoresRouter)
 app.use("/api/reservas", reservasRouter)
 app.use(errorHandler)
 
+app.get('/test', (req, res) => {
+  res.json({ valor: 'prueba' });
+});
+
 // Servir archivos estáticos del frontend (Vite)
 app.use(express.static(path.join(__dirname, '../../front/dist')));
 // reenviar todo al front React (SPA)
@@ -109,21 +47,9 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../../front/dist/index.html'));
 });
 
+connectDB();
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
-//const PORT = process.env.PORT || 5000;
 
-
-// app.listen(PORT, ()=> {
-
-
-//     console.log(`Server is running on port ${PORT}`);
-
-// })
-
-
-
-
-connectDB()

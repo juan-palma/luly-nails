@@ -1,11 +1,8 @@
 import mongoose from "mongoose";
-//import dotenv from "dotenv";
-//dotenv.config()
 import { loadEnv } from './loadEnv.js';
 loadEnv(['MONGO_DB']);
 
 const URL = process.env.MONGO_DB
-//console.log(`::: Variable Global DB: ${URL}`);
 
 export const connectDB = async () => {
     
