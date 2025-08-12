@@ -62,5 +62,5 @@ jobs:
           username: ${{ secrets.PLESK_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            touch ${{ secrets.REMOTE_PATH }}/restart.txt
+            touch ${{ secrets.REMOTE_PATH }}/back/tmp/restart.txt
             echo "🔄 Reinicio de aplicación via restart.txt"
